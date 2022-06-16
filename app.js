@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const routes = require('./routes/index');
-
+const NotFoundError = require('./errors/NotFoundError');
 const { MONGO_URL, PORT } = require('./utils/utils');
 
 const app = express();
@@ -15,7 +15,7 @@ async function main() {
 }
 
 app.get('/', (req, res) => {
-  console.log('Hello, world!')
+  console.log('Hello, world!');
   res.send(req.body);
 });
 
