@@ -1,10 +1,10 @@
 const Movie = require('../models/movie');
-const NotFoundError = require("../errors/NotFoundError");
+const NotFoundError = require('../errors/NotFoundError');
 
 const getSavedMovies = async (req, res, next) => {
   try {
     const movies = await Movie.find({ owner: req.user._id });
-    if (!user) {
+    if (!movies) {
       next(new NotFoundError('Фильмы не найдены'));
       return;
     }
@@ -65,8 +65,9 @@ const deleteMovie = async (req, res, next) => {
       return;
     }
     const movieOwner = movieById.owner.toString();
+    // if(!movieById.owner.equals(req.user._id)) {
     if (movieOwner !== req.user._id) {
-      next(new ForbiddenError('Нельзя удалить чужие карточки'));
+      next(new ForbiddenError('Нельзя удалить чужие фильмы'));
       return;
     }
     const movieDelete = await Movie.findByIdAndDelete(movieById);
@@ -79,7 +80,6 @@ const deleteMovie = async (req, res, next) => {
     next(err);
   }
 };
-
 
 module.exports = {
   getSavedMovies,

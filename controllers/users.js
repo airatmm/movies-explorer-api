@@ -9,7 +9,7 @@ const ConflictError = require('../errors/ConflictError');
 const DUPLICATE_MONGOOSE_ERROR_CODE = 11000;
 const SALT_ROUNDS = 10;
 
-const createUser = async (req, res, next) => {
+const register = async (req, res, next) => {
   const {
     name, email, password,
   } = req.body;
@@ -95,7 +95,7 @@ const updateUser = async (req, res, next) => {
 };
 
 module.exports = {
-  createUser,
+  register,
   login,
   getCurrentUser,
   updateUser,

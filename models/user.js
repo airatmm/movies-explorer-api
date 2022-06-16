@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (email) => isEmail(email),
-      message: 'Неправильный формат почты',
+      message: 'Некорректный E-mail',
     },
   },
   password: {
@@ -23,7 +23,6 @@ const userSchema = new mongoose.Schema({
     minlength: 2,
     maxlength: 30,
     required: false,
-    default: 'Жак-Ив Кусто',
   },
 });
 

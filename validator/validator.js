@@ -1,14 +1,20 @@
 const { celebrate, Joi } = require('celebrate');
+const isURL = require('validator/lib/isURL');
 
-const regLink = /(http|https):\/\/(www)?\.?([A-Za-z0-9.-]+)\.([A-z]{2,})((?:\/[+~%/.\w-_]*)?\??(?:[-=&;%@.\w_]*)#?(?:[\w]*))?/;
+const isValidLink = (value) => {
+  if (!isURL(value)) {
+    throw new Error('Некорректная ссылка');
+  }
+  return value;
+};
+// const regLink = /(http|https):\/\/(www)?\.?([A-Za-z0-9.-]+)\.([A-z]{2,})((?:\/[+~%/.\w-_]*)?\??(?:[-=&;%@.\w_]*)#?(?:[\w]*))?/;
+// const regLink = /https?\:\/\/(www\.)?\d?\D{1,}#?/;
 
 // USERS
-// post /signup createUser
+// post /signup register
 const validateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(regLink),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
@@ -26,39 +32,28 @@ const validateLogin = celebrate({
 const validateUserUpdate = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    about: Joi.string().min(2).max(30).required(),
   }),
 });
 
-// path /users/me/avatar updateAvatar
-const validateAvatarUpdate = celebrate({
+const validateCreateMovie = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().regex(regLink).required(),
+    country: Joi.string().required(),
+    director: Joi.string().required(),
+    duration: Joi.number().required(),
+    year: Joi.number().required(),
+    description: Joi.string().required(),
+    image: Joi.string().required().custom(isValidLink),
+    trailerLink: Joi.string().required().custom(isValidLink),
+    thumbnail:Joi.string().required().custom(isValidLink),
+    movieId:Joi.number().required(),
+    nameRU: Joi.string().required(),
+    nameEN:Joi.string().required(),
   }),
 });
 
-// get /users/:userId getUserByID
-const validateParamsUserById = celebrate({
+const validateMovieDelete = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().length(24).hex().required(),
-  }),
-});
-
-// CARDS
-// post /cards createCards
-const validateCard = celebrate({
-  body: Joi.object().keys({
-    link: Joi.string().regex(regLink).required(),
-    name: Joi.string().required().min(2).max(30),
-  }),
-});
-
-// delete /cards/:cardId deleteCard
-// delete /cards/:cardId/likes dislikeCard
-// put /cards/:cardId/likes likeCard
-const validateParamsCardById = celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string().length(24).hex().required(),
+    movieId: Joi.string().length(24).hex().required(),
   }),
 });
 
@@ -66,8 +61,6 @@ module.exports = {
   validateUser,
   validateLogin,
   validateUserUpdate,
-  validateAvatarUpdate,
-  validateParamsUserById,
-  validateCard,
-  validateParamsCardById,
+  validateCreateMovie,
+  validateMovieDelete,
 };
