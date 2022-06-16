@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const routes = require('./routes/index');
 
 const { MONGO_URL, PORT } = require('./utils/utils');
 
@@ -16,6 +17,12 @@ async function main() {
 app.get('/', (req, res) => {
   console.log('Hello, world!')
   res.send(req.body);
+});
+
+app.use(routes);
+
+app.use(() => {
+  throw new NotFoundError('Ой! Такой страницы нет');
 });
 
 app.listen(PORT, () => {
