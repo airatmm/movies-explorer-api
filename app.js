@@ -12,7 +12,7 @@ const router = require('./routes/index');
 const NotFoundError = require('./errors/NotFoundError');
 
 const app = express();
-app.use(cookieParser()); // подключаем парсер кук как мидлвэр
+app.use(cookieParser());
 
 const accessCors = [
   'https://mesto-project-36.nomoredomains.xyz',
@@ -30,25 +30,14 @@ const options = {
 
 app.use(cors(options));
 
-// подключаемся к серверу mongo
 async function main() {
   await mongoose.connect(MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: false,
   });
 }
-// подключаем логгер запросов
-// Логгер запросов нужно подключить до всех обработчиков роутов
 app.use(requestLogger);
-
 app.use(helmet());
-
-// app.get('/', (req, res) => {
-//   res.send(req.body);
-// });
-
-// мидлвэр c методом express.json(),
-// встроенный в express для распознавания входящего объекта запроса как объекта JSON.
 app.use(express.json());
 app.use(limiter);
 app.use(router);
@@ -56,9 +45,10 @@ app.use(router);
 app.use(() => {
   throw new NotFoundError('Ой! Такой страницы нет');
 });
+
 app.use(errorLogger);
-app.use(errors()); // обработчик ошибок celebrate
-app.use(handleError); // централизованная обработка ошибок
+app.use(errors());
+app.use(handleError);
 
 app.listen(PORT);
 
