@@ -15,9 +15,9 @@ const app = express();
 app.use(cookieParser());
 
 const accessCors = [
-  'https://mesto-project-36.nomoredomains.xyz',
-  'http://mesto-project-36.nomoredomains.xyz',
-  'http://localhost:3000',
+  'https://movies.explorer.nomoreparties.sbs',
+  'http://movies.explorer.nomoreparties.sbs',
+  'http://localhost:3001',
 ];
 
 const options = {
