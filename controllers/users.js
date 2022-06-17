@@ -94,9 +94,18 @@ const updateUser = async (req, res, next) => {
   }
 };
 
+const signout = (req, res) => {
+  res.status(200).clearCookie('jwt', {
+    httpOnly: true,
+    sameSite: 'none',
+    // secure: true,
+  }).send({ message: 'Выход' });
+};
+
 module.exports = {
   register,
   login,
   getCurrentUser,
   updateUser,
+  signout,
 };

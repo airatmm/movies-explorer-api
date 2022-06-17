@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const handleError = require('./middlewares/handleError');
 const { MONGO_URL, PORT } = require('./utils/utils');
+const limiter = require('./utils/rateLimitter');
 const router = require('./routes/index');
 const NotFoundError = require('./errors/NotFoundError');
 
@@ -49,8 +50,8 @@ app.use(helmet());
 // мидлвэр c методом express.json(),
 // встроенный в express для распознавания входящего объекта запроса как объекта JSON.
 app.use(express.json());
-
-app.use('/', router);
+app.use(limiter);
+app.use(router);
 
 app.use(() => {
   throw new NotFoundError('Ой! Такой страницы нет');

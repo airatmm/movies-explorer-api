@@ -15,6 +15,4 @@ moviesRouter.get('/', getSavedMovies);
 moviesRouter.post('/', validateCreateMovie, createMovie);
 moviesRouter.delete('/:_id', validateMovieDelete, deleteMovie);
 
-module.exports = {
-  moviesRouter,
-};
+module.exports = moviesRouter;
