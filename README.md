@@ -19,3 +19,8 @@ npm i
 npm start
 ```
 Проект запустится по адресу http://localhost:3000/
+
+
+[Ссылка на сервер](https://api.movies.explorer.nomoreparties.sbs)
+
+Публичный IP адрес - 51.250.86.68
