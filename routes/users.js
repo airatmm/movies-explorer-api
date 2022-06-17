@@ -1,4 +1,4 @@
-const router = require('express').Router();
+const usersRouter = require('express').Router();
 
 const {
   getCurrentUser,
@@ -6,7 +6,9 @@ const {
 } = require('../controllers/users');
 const { validateUserUpdate } = require('../validator/validator');
 
-router.get('/me', getCurrentUser);
-router.patch('/me', validateUserUpdate, updateUser);
+usersRouter.get('/me', getCurrentUser);
+usersRouter.patch('/me', validateUserUpdate, updateUser);
 
-module.exports = router;
+module.exports = {
+  usersRouter,
+};

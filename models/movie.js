@@ -1,16 +1,6 @@
 const mongoose = require('mongoose');
 const isURL = require('validator/lib/isURL');
 
-// const regLink = /(http|https):\/\/(www)?\.?([A-Za-z0-9.-]+)\.([A-z]{2,})((?:\/[+~%/.\w-_]*)?\??(?:[-=&;%@.\w_]*)#?(?:[\w]*))?/gi;
-//   image: {
-//     type: String,
-//     required: true,
-//     validate: {
-//       validator: (link) => regLink.test(link),
-//       message: 'Неправильный формат ссылки',
-//     },
-//   },
-
 const movieSchema = new mongoose.Schema({
   country: {
     type: String,

@@ -1,5 +1,7 @@
 const Movie = require('../models/movie');
 const NotFoundError = require('../errors/NotFoundError');
+const BadRequestError = require('../errors/BadRequestError');
+const ForbiddenError = require('../errors/ForbiddenError');
 
 const getSavedMovies = async (req, res, next) => {
   try {
@@ -16,7 +18,6 @@ const getSavedMovies = async (req, res, next) => {
 
 const createMovie = async (req, res, next) => {
   try {
-    const owner = req.user._id;
     const {
       country,
       director,
@@ -39,7 +40,7 @@ const createMovie = async (req, res, next) => {
       image,
       trailerLink,
       thumbnail,
-      owner,
+      owner: req.user._id,
       movieId,
       nameRU,
       nameEN,
@@ -57,16 +58,14 @@ const createMovie = async (req, res, next) => {
 };
 
 const deleteMovie = async (req, res, next) => {
-  const { movieId } = req.params;
+  const { _id } = req.params;
   try {
-    const movieById = await Movie.findById(movieId);
+    const movieById = await Movie.findById(_id);
     if (!movieById) {
       next(new NotFoundError('Нет фильма с таким id'));
       return;
     }
-    const movieOwner = movieById.owner.toString();
-    // if(!movieById.owner.equals(req.user._id)) {
-    if (movieOwner !== req.user._id) {
+    if (!movieById.owner.equals(req.user._id)) {
       next(new ForbiddenError('Нельзя удалить чужие фильмы'));
       return;
     }

@@ -46,12 +46,12 @@ const login = async (req, res, next) => {
   }
   try {
     const user = await User.findUserByCredentials(email, password);
-    const token = await getToken(user._id);
+    const token = await getToken(user);
     res.cookie('jwt', token, {
       maxAge: 3600000 * 24 * 7,
       httpOnly: true,
       sameSite: 'none',
-      secure: true,
+      // secure: true,
     });
     res.status(200).send({ token });
   } catch (err) {

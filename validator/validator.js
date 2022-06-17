@@ -7,11 +7,7 @@ const isValidLink = (value) => {
   }
   return value;
 };
-// const regLink = /(http|https):\/\/(www)?\.?([A-Za-z0-9.-]+)\.([A-z]{2,})((?:\/[+~%/.\w-_]*)?\??(?:[-=&;%@.\w_]*)#?(?:[\w]*))?/;
-// const regLink = /https?\:\/\/(www\.)?\d?\D{1,}#?/;
 
-// USERS
-// post /signup register
 const validateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -20,7 +16,6 @@ const validateUser = celebrate({
   }),
 });
 
-// post /signin login
 const validateLogin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -28,7 +23,6 @@ const validateLogin = celebrate({
   }),
 });
 
-// path /users/me updateUser
 const validateUserUpdate = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
@@ -44,16 +38,16 @@ const validateCreateMovie = celebrate({
     description: Joi.string().required(),
     image: Joi.string().required().custom(isValidLink),
     trailerLink: Joi.string().required().custom(isValidLink),
-    thumbnail:Joi.string().required().custom(isValidLink),
-    movieId:Joi.number().required(),
+    thumbnail: Joi.string().required().custom(isValidLink),
+    movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
-    nameEN:Joi.string().required(),
+    nameEN: Joi.string().required(),
   }),
 });
 
 const validateMovieDelete = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.string().length(24).hex().required(),
+    _id: Joi.string().length(24).hex().required(),
   }),
 });
 
