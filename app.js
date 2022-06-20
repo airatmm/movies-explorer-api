@@ -11,13 +11,10 @@ const limiter = require('./utils/rateLimitter');
 const router = require('./routes/index');
 const NotFoundError = require('./errors/NotFoundError');
 
-const app = express();
-app.use(cookieParser());
-
 const accessCors = [
   'https://movies.explorer.nomoreparties.sbs',
   'http://movies.explorer.nomoreparties.sbs',
-  'http://localhost:3001',
+  'http://localhost:3000',
 ];
 
 const options = {
@@ -28,16 +25,18 @@ const options = {
   credentials: true,
 };
 
-app.use(cors(options));
-
 async function main() {
   await mongoose.connect(MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: false,
   });
 }
-app.use(requestLogger);
+
+const app = express();
 app.use(helmet());
+app.use(cookieParser());
+app.use(cors(options));
+app.use(requestLogger);
 app.use(express.json());
 app.use(limiter);
 app.use(router);
