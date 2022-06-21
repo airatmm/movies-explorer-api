@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-const { secretKey } = require('../utils/utils');
+const { secretKey } = require('./configuration');
 
 // JSON Web Token
 // JSON объект закодированный с помощью секрета JWT_SECRET (пока простой как в тренажере)

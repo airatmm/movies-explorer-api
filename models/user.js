@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const isEmail = require('validator/lib/isEmail');
 const bcrypt = require('bcrypt');
 const UnauthorizedError = require('../errors/UnauthorizedError');
+const { messageUnauthorizedErrorGeneral, messageValidationEmailError } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -10,7 +11,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (email) => isEmail(email),
-      message: 'Некорректный E-mail',
+      message: messageValidationEmailError,
     },
   },
   password: {
@@ -34,36 +35,19 @@ const userSchema = new mongoose.Schema({
 // Метод findUserByCredentials. Поиск пользователя по почте
 // собственный метод. Mongoose позволяет добавить его в схему записав в свойство statics
 
-// userSchema.statics.findUserByCredentials = function (email, password) {
-//   return this.findOne({ email }).select('+password')
-//     // по умолчанию хеш пароля пользователя не будет возвращаться из базы,
-//     // но для аутентификации хэш пароля нужен (метод .select + 'password')
-//     .then((user) => {
-//       if (!user) {
-//         throw new UnauthorizedError('Неправильные email или пароль');
-//       }
-//       return bcrypt.compare(password, user.password) // сравниваем переданный пароль и хеш из базы
-//         .then((matched) => {
-//           if (!matched) {
-//             throw new UnauthorizedError('Неправильные email или пароль');
-//           }
-//           return user;
-//         });
-//     });
-// };
-
 userSchema.statics.findUserByCredentials = async function (email, password) {
   const user = await this.findOne({ email }).select('+password');
-    // по умолчанию хеш пароля пользователя не будет возвращаться из базы,
-    // но для аутентификации хэш пароля нужен (метод .select + 'password')
-      if (!user) {
-        throw new UnauthorizedError('Неправильные email или пароль');
-      }
-      const matched= await bcrypt.compare(password, user.password); // сравниваем переданный пароль и хеш из базы
-        if (!matched) {
-            throw new UnauthorizedError('Неправильные email или пароль');
-          }
-          return user;
+  // по умолчанию хеш пароля пользователя не будет возвращаться из базы,
+  // но для аутентификации хэш пароля нужен (метод .select + 'password')
+  if (!user) {
+    throw new UnauthorizedError(messageUnauthorizedErrorGeneral);
+  }
+  // сравниваем переданный пароль и хеш из базы
+  const matched = await bcrypt.compare(password, user.password);
+  if (!matched) {
+    throw new UnauthorizedError(messageUnauthorizedErrorGeneral);
+  }
+  return user;
 };
 
 module.exports = mongoose.model('user', userSchema);

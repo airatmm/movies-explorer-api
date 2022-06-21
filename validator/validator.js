@@ -1,9 +1,10 @@
 const { celebrate, Joi } = require('celebrate');
 const isURL = require('validator/lib/isURL');
+const { messageValidationLinkError } = require('../utils/constants');
 
 const isValidLink = (value) => {
   if (!isURL(value)) {
-    throw new Error('Некорректная ссылка');
+    throw new Error(messageValidationLinkError);
   }
   return value;
 };

@@ -2,12 +2,19 @@ const Movie = require('../models/movie');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const ForbiddenError = require('../errors/ForbiddenError');
+const {
+  messageBadRequestError,
+  messageBadRequestErrorMoviesId,
+  messageForbiddenErrorMovies,
+  messageNotFoundErrorMovies,
+  messageNotFoundErrorMoviesId,
+} = require('../utils/constants');
 
 const getSavedMovies = async (req, res, next) => {
   try {
     const movies = await Movie.find({ owner: req.user._id });
     if (!movies) {
-      next(new NotFoundError('Фильмы не найдены'));
+      next(new NotFoundError(messageNotFoundErrorMovies));
       return;
     }
     res.status(200).send(movies);
@@ -50,7 +57,7 @@ const createMovie = async (req, res, next) => {
     res.status(201).send(movie);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      next(new BadRequestError('Поля должны быть заполнены'));
+      next(new BadRequestError(messageBadRequestError));
       return;
     }
     next(err);
@@ -62,18 +69,18 @@ const deleteMovie = async (req, res, next) => {
   try {
     const movieById = await Movie.findById(_id);
     if (!movieById) {
-      next(new NotFoundError('Нет фильма с таким id'));
+      next(new NotFoundError(messageNotFoundErrorMoviesId));
       return;
     }
     if (!movieById.owner.equals(req.user._id)) {
-      next(new ForbiddenError('Нельзя удалить чужие фильмы'));
+      next(new ForbiddenError(messageForbiddenErrorMovies));
       return;
     }
     const movieDelete = await Movie.findByIdAndDelete(movieById);
     res.status(200).send(movieDelete);
   } catch (err) {
     if (err.name === 'CastError') {
-      next(new BadRequestError('Некорректный id фильма'));
+      next(new BadRequestError(messageBadRequestErrorMoviesId));
       return;
     }
     next(err);

@@ -9,4 +9,4 @@ module.exports = {
   MONGO_URL,
   PORT,
   secretKey,
-}
+};

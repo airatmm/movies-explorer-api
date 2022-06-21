@@ -6,10 +6,11 @@ const cors = require('cors');
 const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const handleError = require('./middlewares/handleError');
-const { MONGO_URL, PORT } = require('./utils/utils');
+const { MONGO_URL, PORT } = require('./utils/configuration');
 const limiter = require('./utils/rateLimitter');
 const router = require('./routes/index');
 const NotFoundError = require('./errors/NotFoundError');
+const { messageNotFoundErrorGeneral } = require('./utils/constants');
 
 const accessCors = [
   'https://movies.explorer.nomoreparties.sbs',
@@ -43,7 +44,7 @@ app.use(express.json());
 app.use(router);
 
 app.use(() => {
-  throw new NotFoundError('Ой! Такой страницы нет');
+  throw new NotFoundError(messageNotFoundErrorGeneral);
 });
 
 app.use(errorLogger);

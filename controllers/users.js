@@ -4,7 +4,15 @@ const User = require('../models/user');
 const { getToken } = require('../utils/jwt');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
-const { DUPLICATE_MONGOOSE_ERROR_CODE, SALT_ROUNDS } = require('../utils/constants');
+const BadRequestError = require('../errors/BadRequestError');
+const {
+  DUPLICATE_MONGOOSE_ERROR_CODE,
+  SALT_ROUNDS,
+  messageBadRequestError,
+  messageConflictError,
+  messageNotFoundErrorUserId,
+  messageSignout,
+} = require('../utils/constants');
 
 const register = async (req, res, next) => {
   const {
@@ -20,11 +28,11 @@ const register = async (req, res, next) => {
     res.status(201).send(result);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      next(new BadRequestError('Произошла ошибка. Поля должны быть заполнены'));
+      next(new BadRequestError(messageBadRequestError));
       return;
     }
     if (err.code === DUPLICATE_MONGOOSE_ERROR_CODE) {
-      next(new ConflictError('Пользователь с таким e-mail уже существует'));
+      next(new ConflictError(messageConflictError));
       return;
     }
     next(err);
@@ -52,7 +60,7 @@ const getCurrentUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) {
-      next(new NotFoundError('Пользователь по заданному id отсутствует в базе'));
+      next(new NotFoundError(messageNotFoundErrorUserId));
       return;
     }
     res.status(200).send(user);
@@ -72,11 +80,11 @@ const updateUser = async (req, res, next) => {
     res.status(200).send(user);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      next(new BadRequestError('Поля должны быть заполнены'));
+      next(new BadRequestError(messageBadRequestError));
       return;
     }
     if (err.code === DUPLICATE_MONGOOSE_ERROR_CODE) {
-      next(new ConflictError('Пользователь с таким e-mail уже существует'));
+      next(new ConflictError(messageConflictError));
       return;
     }
     next(err);
@@ -88,7 +96,7 @@ const signout = (req, res) => {
     httpOnly: true,
     sameSite: 'none',
     secure: true,
-  }).send({ message: 'Выход' });
+  }).send({ message: messageSignout });
 };
 
 module.exports = {
