@@ -69,6 +69,7 @@ const getCurrentUser = async (req, res, next) => {
   }
 };
 
+// возможно нужно пассворд тоже менять
 const updateUser = async (req, res, next) => {
   try {
     const { email, name } = req.body;
